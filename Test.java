@@ -16,6 +16,7 @@ public class Test extends JApplet implements MouseListener, MouseMotionListener,
 	final short WIDTH=640, HEIGHT=480;
 	
 	Cursor cursor = new Cursor(WIDTH/2, HEIGHT/2);
+	Bullet bullet = new Bullet(Process.getXDist(WIDTH/2, cursor.x), Process.getYDist(HEIGHT/2, cursor.y),WIDTH/2,HEIGHT/2);
 	
 	public void init() {
 		setSize(WIDTH,HEIGHT);
@@ -26,26 +27,36 @@ public class Test extends JApplet implements MouseListener, MouseMotionListener,
 	}
 	
 	public void paint(Graphics g) {
+		// do calculations
+		double distance = Process.getDistance(WIDTH/2, HEIGHT/2, cursor.x, cursor.y);
+		double angle = Process.getAngle(distance, HEIGHT/2, cursor.y);
+		
+		bullet.x += bullet.xVel/10;
+		bullet.y += bullet.yVel/10;
+		
 		// draw background
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		// draw origin point
 		g.setColor(Color.BLUE);
 		g.fillOval(WIDTH/2, HEIGHT/2, 20, 20);
+		// draw bullet
+		g.setColor(Color.BLACK);
+		g.fillOval(bullet.x, bullet.y, 5, 5);
 		// draw connecting line
 		g.setColor(Color.RED);
 		g.drawLine(WIDTH/2+10, HEIGHT/2+10, cursor.x+10, cursor.y+10);
 		// draw debug-related things
-		double distance = Process.getDistance(WIDTH/2, HEIGHT/2, cursor.x, cursor.y);
 		g.drawString(Double.toString(distance), 50, 50);
-		double angle = Process.getAngle(distance, HEIGHT/2, cursor.y);
 		g.drawString(Double.toString(angle), 50, 100);
 	}
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		bullet.xVel = (int) Process.getXDist(WIDTH/2, cursor.x);
+		bullet.yVel = (int) Process.getYDist(HEIGHT/2, cursor.y);
+		bullet.x = WIDTH/2;
+		bullet.y = HEIGHT/2;
 	}
 
 	@Override
